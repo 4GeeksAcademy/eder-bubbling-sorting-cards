@@ -19,11 +19,10 @@ const cardValue = [
   "10",
   "J",
   "Q",
-  "K"
+  "K",
 ];
 const inputCardsToDraw = document.getElementById("input-cards-to-draw");
 const buttonDraw = document.getElementById("button-draw");
-const buttonSort = document.getElementById("button-sort");
 const button = document.getElementById("button-event");
 const cardBody = document.getElementById("testhtml");
 const cardBodyBubble = document.getElementById("testhtml2");
@@ -34,6 +33,7 @@ let randomType = 0;
 let randomValue = 0;
 let cardsToDraw = 0;
 let counter = 0;
+let logCount = 0;
 
 /* Functions */
 
@@ -55,6 +55,7 @@ const bubbleSort = (arr1, arr2) => {
     let index = 0;
     while (index < wall) {
       //comparar las posiciones adyacentes, si la correcta es más grande, tenemos que intercambiar
+      //!!!!!!!!!!!--> Duplicamos los auxiliares y el desplacamientos en dos array para mantener la relacion de valor y tipo(trebol,corazon,etc)
       if (copyArr1[index] > copyArr1[index + 1]) {
         let aux = copyArr1[index];
         let aux2 = copyArr2[index];
@@ -63,8 +64,9 @@ const bubbleSort = (arr1, arr2) => {
         copyArr2[index] = copyArr2[index + 1];
         copyArr2[index + 1] = aux2;
         sortedLogCards = { values: [...copyArr1], types: [...copyArr2] };
-        console.log(sortedLogCards);
+        // console.log(sortedLogCards);
         bubbleLog(sortedLogCards);
+        logCount++;
       }
 
       index++;
@@ -72,7 +74,7 @@ const bubbleSort = (arr1, arr2) => {
     wall--; //disminuir la pared para optimizar
   }
 };
-////STOP HERE////////
+////Funcion Crear Cartas por Draw///////
 function newCardHtml() {
   let fragment = document.createDocumentFragment();
   while (counter < cardsToDraw) {
@@ -103,17 +105,22 @@ function newCardHtml() {
   cardBody.appendChild(fragment);
   counter = 0;
 }
-
+////Funcion Crear Cartas pora las iteraciones del Bubble////////
 function bubbleLog(obj) {
   let fragment2 = document.createDocumentFragment();
   let newDiv3 = document.createElement("div");
   newDiv3.className =
-    "row justify-content-center gap-5 mb-5 border border-dark border-4 py-5";
+    "row justify-content-center gap-5 mb-5 border border-dark border-4 py-4";
+  newDiv3.innerHTML = `
+    <div class="col-auto justify-content-start">
+       <p class="display-6 fw-bold">Log #${logCount}</p> 
+    </div>  
+  `;
   for (let i = 0, l = obj.types.length; i < l; i++) {
     let newDiv2 = document.createElement("div");
     newDiv2.className =
       "card col-5 col-sm-3 col-md-2 col-lg-2 col-xl-2 col-xxl-1 card-background";
-    newDiv2.innerHTML = `      
+    newDiv2.innerHTML = `          
       <div class="col">
         <div class="position-absolute ps-2 top-0 start-0 ">
           <i class="fa-solid ${cardStyle[obj.types[i]]}">${
@@ -134,7 +141,6 @@ function bubbleLog(obj) {
     }</i>
         </div>
       </div>`;
-
     newDiv3.appendChild(newDiv2);
   }
   fragment2.appendChild(newDiv3);
@@ -152,7 +158,8 @@ buttonDraw.addEventListener("click", () => {
   inputCardsToDraw.value = "";
 });
 
-///////////////// TEST /////////////////////
 button.addEventListener("click", function() {
+  logCount = 0;
+  cardBodyBubble.replaceChildren();
   bubbleSort(valuesToSort, typesToSort);
 });
