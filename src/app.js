@@ -29,7 +29,7 @@ const cardBody = document.getElementById("testhtml");
 const cardBodyBubble = document.getElementById("testhtml2");
 const valuesToSort = [];
 const typesToSort = [];
-let sortedCards = {};
+let sortedLogCards = {};
 let randomType = 0;
 let randomValue = 0;
 let cardsToDraw = 0;
@@ -62,17 +62,17 @@ const bubbleSort = (arr1, arr2) => {
         copyArr1[index + 1] = aux;
         copyArr2[index] = copyArr2[index + 1];
         copyArr2[index + 1] = aux2;
+        sortedLogCards = { values: [...copyArr1], types: [...copyArr2] };
+        console.log(sortedLogCards);
+        bubbleLog(sortedLogCards);
       }
+
       index++;
     }
     wall--; //disminuir la pared para optimizar
   }
-  return {
-    values: copyArr1,
-    types: copyArr2
-  };
 };
-
+////STOP HERE////////
 function newCardHtml() {
   let fragment = document.createDocumentFragment();
   while (counter < cardsToDraw) {
@@ -102,40 +102,42 @@ function newCardHtml() {
   }
   cardBody.appendChild(fragment);
   counter = 0;
-  sortedCards = bubbleSort(valuesToSort, typesToSort);
-  console.log(sortedCards);
 }
 
-function bubbleLog() {
+function bubbleLog(obj) {
   let fragment2 = document.createDocumentFragment();
-  for (let i = 0, l = sortedCards.types.length; i < l; i++) {
+  let newDiv3 = document.createElement("div");
+  newDiv3.className =
+    "row justify-content-center gap-5 mb-5 border border-dark border-4 py-5";
+  for (let i = 0, l = obj.types.length; i < l; i++) {
     let newDiv2 = document.createElement("div");
     newDiv2.className =
       "card col-5 col-sm-3 col-md-2 col-lg-2 col-xl-2 col-xxl-1 card-background";
-    newDiv2.innerHTML = `
+    newDiv2.innerHTML = `      
       <div class="col">
         <div class="position-absolute ps-2 top-0 start-0 ">
-          <i class="fa-solid ${cardStyle[sortedCards.types[i]]}">${
-      cardType[sortedCards.types[i]]
+          <i class="fa-solid ${cardStyle[obj.types[i]]}">${
+      cardType[obj.types[i]]
     }
           </i>
         </div>
       </div>
       <div class="col">
         <div class=" d-flex justify-content-center">
-          <p class="m-0 pt-3 value">${cardValue[sortedCards.values[i]]}</p>
+          <p class="m-0 pt-3 value">${cardValue[obj.values[i]]}</p>
         </div>
       </div>
       <div class="col ">
         <div class="position-absolute px-2 bottom-0 end-0">
-          <i class="fa-solid  fa-flip-vertical  ${
-            cardStyle[sortedCards.types[i]]
-          } ">${cardType[sortedCards.types[i]]}</i>
+          <i class="fa-solid  fa-flip-vertical  ${cardStyle[obj.types[i]]} ">${
+      cardType[obj.types[i]]
+    }</i>
         </div>
       </div>`;
 
-    fragment2.appendChild(newDiv2);
+    newDiv3.appendChild(newDiv2);
   }
+  fragment2.appendChild(newDiv3);
   cardBodyBubble.appendChild(fragment2);
 }
 
@@ -152,5 +154,5 @@ buttonDraw.addEventListener("click", () => {
 
 ///////////////// TEST /////////////////////
 button.addEventListener("click", function() {
-  bubbleLog();
+  bubbleSort(valuesToSort, typesToSort);
 });
